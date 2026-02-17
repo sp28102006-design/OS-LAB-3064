@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+int main() {
+    int n, i;
+    int burst[10], wait[10], turn[10];
+    float avg_w = 0, avg_t = 0;
+
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    printf("Enter the burst time for each process:\n");
+    for (i = 0; i < n; i++)
+        scanf("%d", &burst[i]);
+
+    wait[0] = 0;
+    for (i = 1; i < n; i++)
+        wait[i] = wait[i - 1] + burst[i - 1];
+
+    for (i = 0; i < n; i++)
+        turn[i] = wait[i] + burst[i];
+
+    printf("\nGantt Chart:\n|");
+    for (i = 0; i < n; i++)
+        printf(" P%d |", i + 1);
+
+    printf("\n0");
+    for (i = 0; i < n; i++)
+        printf("   %d", turn[i]);
+
+    for (i = 0; i < n; i++) {
+        avg_w += wait[i];
+        avg_t += turn[i];
+    }
+
+    printf("\nAverage Waiting Time: %.2f", avg_w / n);
+    printf("\nAverage Turnaround Time: %.2f", avg_t / n);
+
+    return 0;
+}
+Sample Input
+4
+10 5 8 3
+
+output
+Gantt Chart:
+| P1 | P2 | P3 | P4 |
+0   10   15   23   26
+Average Waiting Time: 8.50
+Average Turnaround Time: 15.25
