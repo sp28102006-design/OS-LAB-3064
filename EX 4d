@@ -1,0 +1,77 @@
+#include <stdio.h>
+
+void findWaitingTime(int bt[], int wt[], int n, int q)
+{
+    int rem_bt[n];
+
+    for (int i = 0; i < n; i++)
+        rem_bt[i] = bt[i];
+
+    int t = 0;
+
+    while (1) {
+        int done = 1;
+
+        for (int i = 0; i < n; i++) {
+            if (rem_bt[i] > 0) {
+                done = 0;
+
+                if (rem_bt[i] > q) {
+                    t += q;
+                    rem_bt[i] -= q;
+                } else {
+                    t += rem_bt[i];
+                    wt[i] = t - bt[i];
+                    rem_bt[i] = 0;
+                }
+            }
+        }
+
+        if (done == 1)
+            break;
+    }
+}
+
+int main()
+{
+    int n, q;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    int bt[n], wt[n], tat[n];
+
+    printf("Enter burst times:\n");
+    for (int i = 0; i < n; i++) {
+        printf("P%d: ", i+1);
+        scanf("%d", &bt[i]);
+    }
+
+    printf("Enter time quantum: ");
+    scanf("%d", &q);
+
+    findWaitingTime(bt, wt, n, q);
+
+    float avgWT = 0, avgTAT = 0;
+
+    printf("\nProcess\tBT\tWT\tTAT\n");
+
+    for (int i = 0; i < n; i++) {
+        tat[i] = bt[i] + wt[i];
+
+        printf("P%d\t%d\t%d\t%d\n",
+               i+1, bt[i], wt[i], tat[i]);
+
+        avgWT += wt[i];
+        avgTAT += tat[i];
+    }
+
+    printf("\nAverage Waiting Time = %.2f", avgWT/n);
+    printf("\nAverage Turnaround Time = %.2f\n", avgTAT/n);
+
+    return 0;
+
+Sample Input
+n = 4
+Burst times: 5 9 6 7
+Time quantum = 4
